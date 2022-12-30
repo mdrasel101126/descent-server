@@ -22,11 +22,41 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const userCollection = client.db("Descent").collection("users");
+    const productCollection = client.db("Descent").collection("products");
 
+    //get api
+    //get users api
     app.get("/users", async (req, res) => {
       const query = {};
       const users = await userCollection.find(query).toArray();
       res.send(users);
+    });
+    //get shirt
+    app.get("/products/shirts", async (req, res) => {
+      const len = parseInt(req.query.len);
+      const query = { category: "shirt" };
+      const shirts = await productCollection.find(query).limit(len).toArray();
+      res.send(shirts);
+    });
+    app.get("/products/tshirts", async (req, res) => {
+      const len = parseInt(req.query.len);
+      const query = { category: "Tshirt" };
+      const shirts = await productCollection.find(query).limit(len).toArray();
+      res.send(shirts);
+    });
+    app.get("/products/pants", async (req, res) => {
+      const len = parseInt(req.query.len);
+      const query = { category: "Pant" };
+      const shirts = await productCollection.find(query).limit(len).toArray();
+      res.send(shirts);
+    });
+
+    //post api
+    //post products
+    app.post("/products", async (req, res) => {
+      const product = req.body;
+      const result = await productCollection.insertOne(product);
+      res.send(result);
     });
 
     //put api
