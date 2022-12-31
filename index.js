@@ -23,6 +23,8 @@ async function run() {
   try {
     const userCollection = client.db("Descent").collection("users");
     const productCollection = client.db("Descent").collection("products");
+    const bookingCollection = client.db("Descent").collection("bookings");
+    const reviewCollection = client.db("Descent").collection("reviews");
 
     //get api
     //get users api
@@ -51,6 +53,16 @@ async function run() {
       res.send(shirts);
     });
 
+    //get details api
+
+    app.get("/products/details/:id", async (req, res) => {
+      const id = req.params.id;
+      //console.log(id);
+      const query = { _id: ObjectId(id) };
+      const product = await productCollection.findOne(query);
+      res.send(product);
+    });
+
     //post api
     //post products
     app.post("/products", async (req, res) => {
@@ -59,10 +71,25 @@ async function run() {
       res.send(result);
     });
 
+    //post booking api
+
+    app.post("/bookings", async (req, res) => {
+      const booking = req.body;
+      const result = await bookingCollection.insertOne(booking);
+      res.send(result);
+    });
+
+    //post review
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
     //put api
     app.put("/users", async (req, res) => {
       const user = req.body;
-      console.log(user);
+      //console.log(user);
       const query = { email: user.email };
       const options = { upsert: true };
       const updatedDoc = {
