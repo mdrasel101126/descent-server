@@ -63,6 +63,23 @@ async function run() {
       res.send(product);
     });
 
+    //get reviews by service id api
+    app.get("/reviews", async (req, res) => {
+      let query = {};
+      //console.log(req.query.id);
+      if (req.query.id) {
+        query = {
+          product_id: req.query.id,
+        };
+      }
+      const options = {
+        sort: { comment_date: -1 },
+      };
+      const cursor = reviewCollection.find(query, options);
+      const reviews = await cursor.toArray();
+      res.send(reviews);
+    });
+
     //post api
     //post products
     app.post("/products", async (req, res) => {
